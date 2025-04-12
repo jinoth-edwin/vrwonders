@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VR Wonders - Auth</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: linear-gradient(135deg, #ff69b4, #ffd1dc);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .auth-container {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    .tabs {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .tab {
+      flex: 1;
+      padding: 10px;
+      text-align: center;
+      cursor: pointer;
+      font-weight: bold;
+      border-radius: 10px;
+      background-color: #eee;
+      transition: 0.3s;
+    }
+
+    .tab.active {
+      background-color: #ff69b4;
+      color: white;
+    }
+
+    form {
+      display: none;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    form.active {
+      display: flex;
+    }
+
+    input {
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+    }
+
+    button {
+      background-color: #ff69b4;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #e054a6;
+    }
+
+    .link {
+      text-align: center;
+      font-size: 0.9em;
+    }
+
+    .link a {
+      color: #ff69b4;
+      text-decoration: none;
+    }
+
+    @media (max-width: 480px) {
+      .auth-container {
+        padding: 20px;
+      }
+
+      .tab {
+        font-size: 0.9em;
+        padding: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-container">
+    <div class="tabs">
+      <div class="tab login active" onclick="showTab('login')">Login</div>
+      <div class="tab register" onclick="showTab('register')">Register</div>
+    </div>
+
+    <form class="login active">
+      <input type="number" name="mobile" placeholder="Mobile number" required />
+      <input type="password" name="pass" placeholder="Password" required />
+      <input name="type" type="hidden">
+      <button type="submit">Login</button>
+      <p class="link">Don't have an account? <a href="#" onclick="showTab('register')">Register</a></p>
+    </form>
+
+    <form class="register">
+      <input type="text" name="name" placeholder="Name" required />
+      <input type="number" name="mobile" placeholder="Mobile number" required />
+      <input type="password" name="pass" placeholder="Password" required />
+      <input type="password" name="cpass" placeholder="Confirm Password" required />
+      <input name="type" type="hidden">
+      <button type="submit">Register</button>
+      <p class="link">Already have an account? <a href="#" onclick="showTab('login')">Login</a></p>
+    </form>
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script>
+    function showTab(tab) {
+        $('form').removeClass('active');
+        $('.tab').removeClass('active');
+        $("."+tab).addClass('active')
+    }
+  </script>
+</body>
+</html>
