@@ -760,7 +760,7 @@ function submitOrder(event) {
     message: formData.get('message'),
   };
 
-  fetch('http://localhost:5000/api/auth/neworder', {
+  fetch('https://vrwonders-dak2rd39h-jinoth-edwins-projects.vercel.app/api/auth/neworder', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

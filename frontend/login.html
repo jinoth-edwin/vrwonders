@@ -145,7 +145,7 @@
         localStorage.setItem("isadmin",true)
         window.location.href="admin.html";
       }
-      $.post('http://localhost:5000/api/auth/login', data, function (res) {
+      $.post('https://vrwonders-dak2rd39h-jinoth-edwins-projects.vercel.app/api/auth/login', data, function (res) {
         Swal.fire({
           icon: res.success ? 'success' : 'error',
           title: res.msg,
@@ -175,7 +175,7 @@
 
       const data = $(this).serialize();
 
-      $.post('http://localhost:5000/api/auth/register', data, function (res) {
+      $.post('https://vrwonders-dak2rd39h-jinoth-edwins-projects.vercel.app/api/auth/register', data, function (res) {
         Swal.fire({
           icon: res.success ? 'success' : 'error',
           title: res.msg,
