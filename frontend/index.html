@@ -460,11 +460,14 @@ form {
 
     </style>
 </head>
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <body>
     <header>
         <div class="header-container">
           <button class="menu-toggle" onclick="toggleMenu()">☰</button>
-          <span class="logo">VR Wonders - Online Customized Gift Shop</span>
+          <span class="logo">VR Wonders - Online Customized Gift Shop<br><h5 id="welcomeText"></h5></span>
+          
         </div>
       </header>
       
@@ -474,7 +477,7 @@ form {
           <li><a href="#about">About</a></li>
           <li><a href="#categories">Categories</a></li>
           <li><a href="#contact">Contact</a></li>
-          <li><a href=login.html>login</a></li>
+          <li><a href=login.html id="login">login</a></li>
         </ul>
       </nav>
     <section class="hero" id="home">
@@ -485,6 +488,7 @@ form {
 
     <section class="about-section" id="about">
         <div class="about-header">
+          
             <h2>About VR Wonders</h2>
             <p class="tagline"><strong>"A gift is the unique language to express your love!"</strong></p>
         </div>
@@ -678,7 +682,7 @@ form {
         </div>
     
         <div class="form-container">
-            <form id="orderForm" action="mailto:your-email@example.com" method="post" enctype="text/plain">
+            <form id="orderForm" onsubmit="submitOrder(event)">
                 <div class="form-field">
                     <label for="name">Name:</label>
                     <input type="text" id="name" name="name" required>
@@ -734,6 +738,65 @@ form {
         const nav = document.getElementById("navbar");
         nav.classList.toggle("show");
     }
+  const name = localStorage.getItem('name');
+
+// Update the text content of the h3
+if (name) {
+  document.getElementById('welcomeText').textContent = `Welcome ${name.toUpperCase()}`;
+  document.getElementById('login').textContent = `Logout`;
+} else {
+  document.getElementById('welcomeText').textContent = `Welcome Guest`;
+  document.getElementById('login').textContent = `Login`;
+} 
+
+function submitOrder(event) {
+  event.preventDefault(); 
+
+  const formData = new FormData(document.getElementById('orderForm'));
+  const orderData = {
+    name: formData.get('name'),
+    email: formData.get('email'),
+    mobile: formData.get('mobile'),
+    message: formData.get('message'),
+  };
+
+  fetch('http://localhost:5000/api/auth/neworder', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(orderData),  
+  })
+  .then(response => response.json())  
+  .then(data => {
+    if (data.success) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Order Placed!',
+        text: 'Thank you! We’ll get in touch soon.',
+        confirmButtonColor: '#e91e63'
+      });
+      document.getElementById('orderForm').reset();
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops!',
+        text: 'Something went wrong. Please try again.',
+        confirmButtonColor: '#e91e63'
+      });
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'An error occurred. Please try again later.',
+      confirmButtonColor: '#e91e63'
+    });
+  });
+}
+
 </script>
 
     </script>

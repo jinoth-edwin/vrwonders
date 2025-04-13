@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Orders View</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f8f9fa;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: auto;
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #d63384;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      font-size: 16px;
+    }
+
+    thead {
+      background-color: #d63384;
+      color: white;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: center;
+      border-bottom: 1px solid #ddd;
+    }
+
+    select {
+      padding: 6px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    .delete-btn {
+      cursor: pointer;
+      color: red;
+      font-size: 20px;
+    }
+
+    @media screen and (max-width: 756px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+
+      thead {
+        display: none;
+      }
+
+      tr {
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 10px;
+      }
+
+      td {
+        text-align: right;
+        padding-left: 50%;
+        position: relative;
+      }
+
+      td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 10px;
+        font-weight: bold;
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Customer Orders</h2>
+    <table id="ordersTable">
+      <thead>
+        <tr>
+          <th>Image</th>
+          <th>Name</th>
+          <th>Mobile</th>
+          <th>Email</th>
+          <th>Quantity</th>
+          <th>Status</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+    if(!localStorage.getItem('isadmin')){
+      window.location.href="login.html";
+    }
+    const API_URL = "http://localhost:5000/api/auth";
+
+    async function fetchOrders() {
+      try {
+        const res = await fetch(`${API_URL}/getorders`);
+        const data = await res.json();
+        if (data.success) {
+          renderOrders(data.orders);
+        } else {
+          alert("Failed to load orders");
+        }
+      } catch (err) {
+        console.error("Error fetching orders:", err);
+      }
+    }
+
+    function renderOrders(orders) {
+      const tbody = document.querySelector("#ordersTable tbody");
+      tbody.innerHTML = "";
+
+      orders.forEach((order, index) => {
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+          <td data-label="Image"><img src="${order.image}" alt="Gift" width="50" style="border-radius: 5px;"></td>
+          <td data-label="Name">${order.name || 'N/A'}</td>
+          <td data-label="Mobile">${order.mobile || 'N/A'}</td>
+          <td data-label="Email">${order.email || 'N/A'}</td>
+          <td data-label="Quantity">${order.quantity}</td>
+          <td data-label="Status">
+            <select onchange="updateStatus('${order._id}', this.value)">
+              <option ${order.status === "Pending" ? "selected" : ""}>Pending</option>
+              <option ${order.status === "Contacted" ? "selected" : ""}>Contacted</option>
+              <option ${order.status === "Completed" ? "selected" : ""}>Completed</option>
+            </select>
+          </td>
+          <td data-label="Delete">
+            <span class="delete-btn" onclick="deleteOrder('${order._id}')">&#10060;</span>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    function updateStatus(orderId, status) {
+      fetch(`${API_URL}/update-order-status/${orderId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ status })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          Swal.fire("Updated!", "Status updated successfully!", "success");
+        } else {
+          Swal.fire("Error!", "Failed to update status", "error");
+        }
+      });
+    }
+
+    function deleteOrder(orderId) {
+      Swal.fire({
+        title: "Delete this order?",
+        text: "You won’t be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Yes, delete it!"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          fetch(`${API_URL}/delete-order/${orderId}`, {
+            method: "DELETE"
+          })
+          .then(res => res.json())
+          .then(data => {
+            if (data.success) {
+              Swal.fire("Deleted!", "Order has been deleted.", "success");
+              fetchOrders(); // refresh table
+            } else {
+              Swal.fire("Error", "Failed to delete order", "error");
+            }
+          });
+        }
+      });
+    }
+
+    fetchOrders();
+  </script>
+</body>
+</html>

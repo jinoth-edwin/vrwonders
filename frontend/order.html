@@ -144,15 +144,20 @@
     <div class="total">Total: $<span id="totalPrice"></span></div>
   </center>
     <div class="button-group">
-      <button onclick="addToCart()">Add to Cart</button>
       <button onclick="placeOrder()">Place Order</button>
     </div>
   </div>
-
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
-    localStorage.setItem("userName", "Jinoth");
-    localStorage.setItem("userMobile", "8056556673");
-    localStorage.setItem("userEmail", "Jinothedwin@gmail.com");
+    nam = localStorage.getItem('name');
+    if (!nam) {
+      Swal.fire({
+          icon: 'Warning',
+          title: "Please Login and Try again",
+        });
+        window.location.href="login.html"
+    }
     // Parse URL parameters
     const params = new URLSearchParams(window.location.search);
     const img = params.get('img');
@@ -163,9 +168,9 @@
     document.getElementById('price').textContent = price.toFixed(2);
 
     // Get user info from localStorage
-    const name = localStorage.getItem('userName') || 'Not set';
-    const email = localStorage.getItem('userEmail') || 'Not set';
-    const phone = localStorage.getItem('userMobile') || 'Not set';
+    const name = localStorage.getItem('name') || 'Not set';
+    const email = localStorage.getItem('email') || 'Not set';
+    const phone = localStorage.getItem('mobile') || 'Not set';
 
     document.getElementById('userName').textContent = name;
     document.getElementById('userEmail').textContent = email;
@@ -183,18 +188,58 @@
 
     quantityInput.addEventListener('input', updateTotal);
     updateTotal();
+  
 
-    // Add to Cart functionality
-    function addToCart() {
-      alert("Gift added to cart!");
-      // You can push to a cart array in localStorage here
-    }
-
-    // Place Order functionality
     function placeOrder() {
-      alert("Order placed successfully!");
-      // You can send order details to backend here
+    const userId = localStorage.getItem('id');
+    const quantity = document.getElementById('quantity').value;
+    const image = img;
+
+    if (!userId) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Not Logged In',
+        text: 'Please login to place an order.',
+      });
+      return;
     }
+
+    fetch("http://localhost:5000/api/auth/neworder", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        userId,
+        quantity,
+        image
+      })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Order Placed',
+          text: 'Your order has been placed successfully!',
+        });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: data.message || 'Failed to place order.',
+        });
+      }
+    })
+    .catch(err => {
+      console.error("Error:", err);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: err.responseJSON.msg,
+      });
+    });
+  }
   </script>
 </body>
 </html>
