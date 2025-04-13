@@ -138,6 +138,7 @@
         $('.tab').removeClass('active');
         $("."+tab).addClass('active')
     }
+    const API_URL = "https://backend-production-ba4a.up.railway.app/api/auth/";
     $('#loginForm').submit(function (e) {
       e.preventDefault();
       const data = $(this).serialize();
@@ -145,7 +146,7 @@
         localStorage.setItem("isadmin",true)
         window.location.href="admin.html";
       }
-      $.post('https://vrwonders-dak2rd39h-jinoth-edwins-projects.vercel.app/api/auth/login', data, function (res) {
+      $.post(API_URL+'login', data, function (res) {
         Swal.fire({
           icon: res.success ? 'success' : 'error',
           title: res.msg,
@@ -175,7 +176,7 @@
 
       const data = $(this).serialize();
 
-      $.post('https://vrwonders-dak2rd39h-jinoth-edwins-projects.vercel.app/api/auth/register', data, function (res) {
+      $.post(API_URL+'register', data, function (res) {
         Swal.fire({
           icon: res.success ? 'success' : 'error',
           title: res.msg,

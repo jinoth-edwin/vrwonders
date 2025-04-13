@@ -203,8 +203,8 @@
       });
       return;
     }
-
-    fetch("https://vrwonders-dak2rd39h-jinoth-edwins-projects.vercel.app/api/auth/neworder", {
+    const API_URL = "https://backend-production-ba4a.up.railway.app/api/auth/";
+    fetch(API_URL+"neworder", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
