@@ -117,7 +117,7 @@
 
     async function fetchOrders() {
       try {
-        const res = await fetch(`${API_URL}/getorders`);
+        const res = await fetch(`${API_URL}getorders`);
         const data = await res.json();
         if (data.success) {
           renderOrders(data.orders);
@@ -158,7 +158,7 @@
     }
 
     function updateStatus(orderId, status) {
-      fetch(`${API_URL}/update-order-status/${orderId}`, {
+      fetch(`${API_URL}update-order-status/${orderId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json"
@@ -186,7 +186,7 @@
         confirmButtonText: "Yes, delete it!"
       }).then((result) => {
         if (result.isConfirmed) {
-          fetch(`${API_URL}/delete-order/${orderId}`, {
+          fetch(`${API_URL}delete-order/${orderId}`, {
             method: "DELETE"
           })
           .then(res => res.json())
