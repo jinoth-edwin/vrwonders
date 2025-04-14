@@ -131,7 +131,7 @@
     <h1>Order Gift</h1>
     <img id="giftImage" src="" alt="Gift">
   
-    <div class="info"><span class="label">Price:</span> $<span id="price"></span></div>
+    <!-- <div class="info"><span class="label">Price:</span> $<span id="price"></span></div> -->
     <div class="info"><span class="label">Name:</span> <span id="userName"></span></div>
     <div class="info"><span class="label">Email:</span> <span id="userEmail"></span></div>
     <div class="info"><span class="label">Phone:</span> <span id="userPhone"></span></div>
@@ -165,13 +165,12 @@
 
     // Fill image and price
     document.getElementById('giftImage').src = img;
-    document.getElementById('price').textContent = price.toFixed(2);
+    // document.getElementById('price').textContent = price.toFixed(2);
 
     // Get user info from localStorage
     const name = localStorage.getItem('name') || 'Not set';
     const email = localStorage.getItem('email') || 'Not set';
     const phone = localStorage.getItem('mobile') || 'Not set';
-
     document.getElementById('userName').textContent = name;
     document.getElementById('userEmail').textContent = email;
     document.getElementById('userPhone').textContent = phone;
@@ -181,9 +180,9 @@
     const totalPriceSpan = document.getElementById('totalPrice');
 
     function updateTotal() {
-      const quantity = parseInt(quantityInput.value) || 1;
-      const total = quantity * price;
-      totalPriceSpan.textContent = total.toFixed(2);
+      // const quantity = parseInt(quantityInput.value) || 1;
+      // const total = quantity * price;
+      // totalPriceSpan.textContent = total.toFixed(2);
     }
 
     quantityInput.addEventListener('input', updateTotal);
