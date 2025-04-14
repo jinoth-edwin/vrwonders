@@ -218,11 +218,14 @@
     .then(data => {
       if (data.success) {
         Swal.fire({
-          icon: 'success',
-          title: 'Order Placed',
-          text: 'Your order has been placed successfully!',
-        });
-        window.location.href="index.html";
+  icon: 'success',
+  title: 'Order Placed',
+  text: 'Your order has been placed successfully!',
+}).then((result) => {
+  if (result.isConfirmed) {
+    window.location.href = "index.html";
+  }
+});
       } else {
         Swal.fire({
           icon: 'error',
